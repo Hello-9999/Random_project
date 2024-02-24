@@ -1,6 +1,10 @@
 import React, { useState } from "react";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../service/login_Server";
 
 const Admin_login = () => {
+  const [email, setemail] = useState("");
+  const [password, setpassword] = useState("");
   const Showpassword = (e) => {
     const passText = document.getElementById("password");
 
@@ -11,8 +15,18 @@ const Admin_login = () => {
     }
   };
 
-  const handle_signin = () => {
-    console.log("first");
+  const handle_signin = (e) => {
+    e.preventDefault();
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        const user = userCredential.user;
+
+        // ...
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+      });
   };
   return (
     <div className="login_container bg-slate-600 h-screen  ">
@@ -33,6 +47,8 @@ const Admin_login = () => {
               id="email"
               type="email"
               placeholder="Email"
+              onChange={(e) => setemail(e.target.value)}
+              required
             />
           </div>
           <div class="mb-6">
@@ -47,6 +63,8 @@ const Admin_login = () => {
               id="password"
               type="password"
               placeholder="Password"
+              required
+              onChange={(e) => setpassword(e.target.value)}
             />
             <p class="text-red-500 text-xs italic"></p>
 
