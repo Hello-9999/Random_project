@@ -1,10 +1,15 @@
 import React, { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../service/login_Server";
+import { useSelector, useDispatch } from "react-redux";
+import addinguserinfo, { Adding_info } from "../Redux/Feature/addinguserinfo";
+import { useNavigate } from "react-router-dom";
 
 const Admin_login = () => {
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const Showpassword = (e) => {
     const passText = document.getElementById("password");
 
@@ -20,6 +25,9 @@ const Admin_login = () => {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
+        console.log(user, "user");
+        dispatch(Adding_info(user));
+        navigate('/adminhome')
 
         // ...
       })
