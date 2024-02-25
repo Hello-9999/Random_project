@@ -3,12 +3,13 @@ import { createSlice } from "@reduxjs/toolkit";
 export const User_info = createSlice({
   name: "user_info",
   initialState: {
-    Info: [{ name: "asdasd" }],
+    Info: [],
   },
   reducers: {
     Adding_info: (state, action) => {
       //   console.log(state.Info);
       console.log(action.payload);
+      state.Info.push(action.payload);
     },
   },
 });

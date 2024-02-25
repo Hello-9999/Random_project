@@ -25,14 +25,27 @@ const Admin_login = () => {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
-        console.log(user, "user");
-        dispatch(Adding_info(user));
-        navigate('/adminhome')
+        const User_data = {
+          ID: user.uid,
 
-        // ...
+          Name: user.displayName,
+          Email: user.email,
+          Email_Verfied: user.emailVerified,
+          Photo: user.photoURL,
+        };
+        console.log(User_data, "data");
+        dispatch(Adding_info(User_data));
+        navigate("/adminhome");
       })
       .catch((error) => {
         const errorCode = error.code;
+
+        console.log(errorCode);
+        if ("auth/invalid-credential" == errorCode) {
+
+          console.log('You are not an admin. 🛑')
+        } else {
+        }
         const errorMessage = error.message;
       });
   };
