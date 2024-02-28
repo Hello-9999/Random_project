@@ -1,7 +1,12 @@
 import { collection, getDocs } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { db } from "../../service/login_Server";
-
+import Card from "@mui/material/Card";
+import CardActions from "@mui/material/CardActions";
+import CardContent from "@mui/material/CardContent";
+import CardMedia from "@mui/material/CardMedia";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
 const Client_home = () => {
   // const response = await getDocs(collection(db, "event"));
   //   seteventdata(response.docs);
@@ -26,18 +31,43 @@ const Client_home = () => {
   });
   return (
     <div className="client_home_container">
-      <div className="container">
-        {client_event.map((e) => {
-          const event_data = e.data();
+      <div className="container m-auto">
+        <div className="flex gap-5">
+          {client_event.map((e) => {
+            const event_data = e.data();
 
-          console.log(event_data);
+            console.log(event_data);
 
-          return (
-            <div className="client_event_container">
-              <h3>{event_data.title}</h3>
-            </div>
-          );
-        })}
+            return (
+              <div className="client_event_container w-100 ">
+                <Card className="">
+                  {/* <CardMedia  src="" title="green iguana" />{" "} */}
+                  <div className="img">
+                    {" "}
+                    <img
+                      src="https://meetings.skift.com/wp-content/uploads/2023/11/a-group-of-diverse-professionals-in-a-high-tech-environment-brainstorming-and-discussing-around-a-futuristic-display-of-advanced-event-technology.jpg"
+                      alt=""
+                    />
+                  </div>
+
+                  <CardContent>
+                    <Typography
+                      gutterBottom
+                      variant="h5"
+                      component="div"
+                      className="title"
+                    >
+                      {event_data.event_title}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {event_data.event_describe}
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
