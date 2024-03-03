@@ -42,113 +42,28 @@ const Admin_addevent = () => {
       const Storageref = ref(storage, `files/${v4()}`);
       await uploadBytes(Storageref, event_poster).then((img_data) => {
         getDownloadURL(img_data.ref).then((url) => {
-          seturl(url);
+          if (url) {
+            const form_data = {
+              event_title: title,
+              event_type: type,
+              event_describe: describe,
+              event_location: location,
+              event_date: date,
+              event_time: time,
+              event_poster: url,
+            };
+            addDoc(collection(db, "event"), form_data);
+            console.log(" Event is added succesfully in your database");
+            navigate("/admin_event");
+          }
         });
       });
-      const form_data = {
-        event_title: title,
-        event_type: type,
-        event_describe: describe,
-        event_location: location,
-        event_date: date,
-        event_time: time,
-        event_poster: url,
-      };
-      addDoc(collection(db, "event"), form_data);
-      console.log(" Event is added succesfully in your database");
-      navigate("/admin_event");
     } catch (error) {
       console.log(error);
     }
-
-    // try {
-    //   console.log(url, "url");
-    //   const form_data = {
-    //     event_title: title,
-    //     event_type: type,
-    //     event_describe: describe,
-    //     event_location: location,
-    //     event_date: date,
-    //     event_time: time,
-    //     event_poster: url,
-    //   };
-
-    //   // console.log(form_data);
-    //   addDoc(collection(db, "event"), form_data);
-    //   alert(" Event is added succesfully in your database");
-    //   // navigate("/admin_event");
-    // } catch (error) {}
-
-    // try {
-    //   await uploadBytes(Storageref, event_poster).then((snapshot) => {
-    //     if (snapshot.state === "success") {
-    //       // const downloadURL = await snapshot.ref.getDownloadURL();
-    //       console.log("Download URL:");
-    //       // setDownloadURL(downloadURL); // Update state with download URL
-    //     }
-    //   });
-    // } catch (error) {
-    //   console.log(error.code);
-    // }
-    // try {
-    //   const file_uid = v4();
-
-    //   // storage
-    //   //   .ref(`/images/` + event_poster.name)
-    //   //   .put(event_poster)
-    //   //   .on("state_change", alert("success"), alert, () => {
-    //   //     storage
-    //   //       .ref("images")
-    //   //       .child(event_poster.name)
-    //   //       .getDownloadURL()
-    //   //       .then((url) => {
-    //   //         console.log(url);
-    //   //       });
-    //   //   });
-
-    //   // const storageRef = ref(storage, "/event/" + file_uid);
-
-    //   // console.log(storageRef)
-    //   // await uploadBytes(storageRef, event_poster).then((snapshot) => {
-    //   //   console.log(snapshot, "hj");
-    //   //   // console.log(data.event_poster);
-    //   //   console.log("Uploaded a blob or file!");
-
-    //   //   // snapshot.ref.getDownloadURL().then((url) => {
-    //   //   //   // data.event_poster = url; // Update the data object
-    //   //   //   console.log(url);
-    //   //   //   // Add the data object to Firestore (see next step)
-    //   //   // });
-    //   // });
-    // } catch (error) {
-    //   console.log(error, "error");
-    // }
-
-    //  code is  workin  addd
-
-    // try {
-    //   const data = {
-    //     event_title: title,
-    //     event_type: type,
-    //     event_describe: describe,
-    //     event_location: location,
-    //     event_date: date,
-    //     event_time: time,
-    //     // event_poster: event_poster,
-    //   };
-    //   const event_data = await addDoc(collection(db, "event"), data);
-    //   alert(" Event is added succesfully in your database");
-    //   navigate("/admin_event");
-    //   console.log(event_data, "er");
-    // } catch (error) {
-    //   console.log(error, "error event");
-    // }
   };
 
-  useEffect(() => {
-    // hadler_add();
-    // data()
-  }, []);
+
 
   return (
     <div className="add_event_container bg-slate-300 h-screen overflow-auto">
