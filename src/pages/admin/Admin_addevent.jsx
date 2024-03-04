@@ -1,19 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Admin_Navbar from "./Admin_Navbar";
-import {
-  doc,
-  setDoc,
-  addDoc,
-  collection,
-  Firestore,
-  // uploadBytes,
-} from "firebase/firestore";
-import { database, db, storage } from "../../service/login_Server";
-import { useNavigate, useLocation, useParams } from "react-router-dom";
+import { addDoc, collection } from "firebase/firestore";
+import { db, storage } from "../../service/login_Server";
+import { useNavigate } from "react-router-dom";
 import TextField from "@mui/material/TextField";
-import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
-import LocationOnTwoToneIcon from "@mui/icons-material/LocationOnTwoTone";
-// import { v4 } from "uuid";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { v4 } from "uuid";
 
 const Admin_addevent = () => {
@@ -23,17 +14,8 @@ const Admin_addevent = () => {
   const [location, setlocation] = useState("");
   const [date, setdate] = useState("");
   const [time, settime] = useState("");
-  const [data, setdata] = useState();
   const [event_poster, setevent_poster] = useState();
-
-  const [imgdata, setimgdata] = useState("");
-  const [url, seturl] = useState();
   const navigate = useNavigate();
-
-  // const llocation = useLocation();
-  // const { from } = llocation.state || { from: "/" };
-
-  // console.log("Coming from:", from);
 
   const hadler_add = async (e) => {
     e.preventDefault();
@@ -62,8 +44,6 @@ const Admin_addevent = () => {
       console.log(error);
     }
   };
-
-
 
   return (
     <div className="add_event_container bg-slate-300 h-screen overflow-auto">
