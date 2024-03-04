@@ -1,31 +1,22 @@
 import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import TextField from "@mui/material/TextField";
-import { db } from "../../service/login_Server";
-import {
-  doc,
-  setDoc,
-  getDocs,
-  collection,
-  deleteDoc,
-  updateDoc,
-  getDoc,
-} from "firebase/firestore";
 
 const style = {
   position: "absolute",
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 500,
+  width: 550,
+  height: "100vh",
   bgcolor: "background.paper",
   border: "2px solid #000",
   boxShadow: 24,
   color: "black",
   p: 4,
+  overflow: "auto",
 };
 const Admin_editevent = ({
   title,
@@ -34,43 +25,19 @@ const Admin_editevent = ({
   location,
   time,
   date,
-  editbutton,
+  type,
   event_box,
   setevent_box,
-  id,
+  settitle,
+  setimage,
+  setdescription,
+  setlocation,
+  settime,
+  setdate,
+  settype,
+  Editbtn,
 }) => {
   const handleClose = () => setevent_box(false);
-  const [edittitle, setedittitle] = useState(title);
-  const [editimage, setediimage] = useState(image);
-  const [editdescription, setedidescription] = useState(description);
-  const [editlocation, setedilocation] = useState(location);
-  const [edittime, seteditime] = useState(time);
-  const [editdate, setedidate] = useState(date);
-  console.log(editimage, "edittitle");
-
-  const Updatehandler = async (e) => {
-    e.preventDefault();
-    db.collection("users")
-      .doc(id)
-      .update({
-        form_data: {
-          event_title: edittitle,
-          //   event_type: type,
-          event_describe: editdescription,
-          event_location: editlocation,
-          event_date: editdate,
-          event_time: edittime,
-          //   event_poster: url,
-        },
-      })
-      .then(function () {
-        console.log("Frank food updated");
-      });
-  };
-
-  useEffect(() => {
-    Updatehandler();
-  }, []);
   return (
     <div className="">
       <Modal
@@ -85,7 +52,7 @@ const Admin_editevent = ({
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
             <div className="img">
-              <img src={editimage} alt="" />
+              <img src={image} alt="" />
             </div>
             <form action="">
               <div className="xl:flex xl:gap-4 xl:items-center xl:mt-0">
@@ -96,9 +63,9 @@ const Admin_editevent = ({
                     label="Title"
                     placeholder="Add Event Title"
                     className=" h-12 p-5 text-xl text-cyan-100 w-full "
-                    onChange={(e) => setedittitle(e.target.value)}
+                    onChange={(e) => settitle(e.target.value)}
                     variant="filled"
-                    value={edittitle}
+                    value={title}
                     focused
                   />
                 </div>
@@ -108,9 +75,9 @@ const Admin_editevent = ({
                     label="Type"
                     placeholder="Add Event Type"
                     className=" h-12 p-5 text-xl text-cyan-100 w-full"
-                    // onChange={(e) => settype(e.target.value)}
+                    onChange={(e) => settype(e.target.value)}
                     variant="filled"
-                    value={"e"}
+                    value={type}
                   />
                 </div>
               </div>
@@ -118,14 +85,14 @@ const Admin_editevent = ({
               <div className="event-describe mt-6 xl:mt-8  w-full  m-auto">
                 <TextField
                   className="p-5 text-xl text-cyan-100 w-full"
-                  onChange={(e) => setedidescription(e.target.value)}
+                  onChange={(e) => setdescription(e.target.value)}
                   minLength={10}
                   placeholder=" Add event detail"
                   multiline
                   maxRows={15}
                   variant="filled"
                   label="Description"
-                  value={editdescription}
+                  value={description}
                 />
               </div>
 
@@ -135,10 +102,10 @@ const Admin_editevent = ({
                     type="text"
                     placeholder="Event venue"
                     className=" h-12 p-5 text-xl text-cyan-100 w-full"
-                    onChange={(e) => setedilocation(e.target.value)}
+                    onChange={(e) => setlocation(e.target.value)}
                     variant="filled"
                     label="Location"
-                    value={editlocation}
+                    value={location}
                   />
                 </div>
 
@@ -150,14 +117,10 @@ const Admin_editevent = ({
 
                   <TextField
                     type="file"
-                    // name=""
                     id="event_poster"
                     accept="image/png,image/jpeg"
                     className="text-lg w-full sm:w-6/12 sm:m-auto"
-                    onChange={(e) => setediimage(e.target.files[0])}
-
-                    // variant="filled"
-                    // value={image}
+                    onChange={(e) => setimage(e.target.files[0])}
                   />
                 </div>
               </div>
@@ -168,9 +131,9 @@ const Admin_editevent = ({
                     type="date"
                     placeholder="Event date"
                     className=" h-12 p-5 text-xl text-cyan-100 w-full md:w-full"
-                    onChange={(e) => setedidate(e.target.value)}
+                    onChange={(e) => setdate(e.target.value)}
                     variant="filled"
-                    value={editdate}
+                    value={date}
                   />
                 </div>
 
@@ -179,11 +142,9 @@ const Admin_editevent = ({
                     type="time"
                     placeholder="Event time"
                     className=" h-12 p-5 text-xl  text-cyan-100 w-full  md:w-full sm:mb-6"
-                    onChange={(e) => seteditime(e.target.value)}
+                    onChange={(e) => settime(e.target.value)}
                     variant="filled"
-                    // label="time"
-
-                    value={edittime}
+                    value={time}
                   />
                 </div>
               </div>
@@ -192,7 +153,7 @@ const Admin_editevent = ({
                 <button
                   className="bg-blue-600 text-white w-full sm:w-8/12"
                   type="submit"
-                  onClick={Updatehandler}
+                  onClick={Editbtn}
                 >
                   {" "}
                   Edit

@@ -26,13 +26,21 @@ import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
 import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
 import { ref } from "firebase/storage";
 import Admin_editevent from "./Admin_editevent";
+import { getDownloadURL, getStorage, uploadBytes } from "firebase/storage";
+
 const Admin_event = () => {
   const navigate = useNavigate();
   const [eventdata, seteventdata] = useState([]);
   const [open, setOpen] = useState(false);
   const [editID, seteditID] = useState();
 
-  // export const []
+  const [edittitle, setedittitle] = useState();
+  const [editimage, setediimage] = useState();
+  const [editdescription, setedidescription] = useState();
+  const [editlocation, setedilocation] = useState();
+  const [edittime, seteditime] = useState();
+  const [editdate, setedidate] = useState();
+  const [editType, setedittype] = useState();
 
   const data =
     "bg-gray-900 text-white rounded-md px-3 py-2 text-sm font-medium xl:text-base";
@@ -40,8 +48,6 @@ const Admin_event = () => {
     e.preventDefault();
     navigate("/admin_event/addevent");
   };
-  //   const route = withRouter
-  //   console.log( route,'er')
 
   const time = () => {
     const value = time();
@@ -63,11 +69,7 @@ const Admin_event = () => {
     } catch (error) {
       console.log(error);
     }
-
-    // console.log(response);
   };
-
-
 
   const event = eventdata.map((data) => {
     const event_detailhandler = { detail: data.data(), id: data.id };
@@ -86,6 +88,77 @@ const Admin_event = () => {
     }
   };
 
+  const Read_more = (e) => {
+    e.preventDefault();
+  };
+
+  const Edithandler = (id, title, poster, desc, location, time, date, type) => {
+    seteditID(id);
+    setedittitle(title);
+    setediimage(poster);
+    setedidescription(desc);
+    setedilocation(location);
+    seteditime(time);
+    setedidate(date);
+    setedittype(type);
+    setOpen(true);
+  };
+
+  const Updatehandler = async (e) => {
+    e.preventDefault();
+
+    if (typeof editimage === "string") {
+      const docRef = doc(db, "event", editID);
+
+      try {
+        await updateDoc(docRef, {
+          event_title: edittitle,
+          event_type: editType,
+          event_describe: editdescription,
+          event_location: editlocation,
+          event_date: editdate,
+          event_time: edittime,
+        });
+
+        setOpen(false);
+        Eventdata();
+        console.log(event, "event");
+        console.log("Updated Sucess !! ");
+      } catch (error) {
+        console.log(error, "error");
+      }
+    } else {
+      const Storageref = ref(storage, `files/${editID}`);
+      const docRef = doc(db, "event", editID);
+
+      try {
+        await uploadBytes(Storageref, editimage).then((img_data) => {
+          getDownloadURL(img_data.ref).then((url) => {
+            console.log(url);
+            if (url) {
+              updateDoc(docRef, {
+                event_title: edittitle,
+                event_type: editType,
+                event_describe: editdescription,
+                event_location: editlocation,
+                event_date: editdate,
+                event_time: edittime,
+                event_poster: url,
+              });
+              console.log(url, "img");
+              setOpen(false);
+              Eventdata();
+              console.log("Update Sucessfully");
+            }
+          });
+        });
+      } catch (error) {
+        console.log(error, "error image edit");
+      }
+    }
+  };
+
+  console.log(editimage, "image");
   useEffect(() => {
     Eventdata();
   }, []);
@@ -107,24 +180,30 @@ const Admin_event = () => {
 
           <div className="h-full container">
             <div className="Admin_event_body_container p-8 container">
-              {/* event_data flex gap-6   */}
               <div className="flex justify-between gap-3 m-auto  sm:m-auto  lg:m-0 lg:flex-nowrap  flex-wrap w-full">
                 {event.map((event_data) => {
-                  console.log(event_data, "deteail");
                   return (
                     <div className="event_box w-full md:w-3/4 lg:w-2/5 shadow m-auto">
-                      {/* {console.log(event_data, "e")}{" "} */}
                       <Admin_editevent
-                        title={event_data.detail.event_title}
-                        image={event_data.detail.event_poster}
-                        description={event_data.detail.event_describe}
-                        location={event_data.detail.event_location}
-                        time={event_data.detail.event_time}
-                        date={event_data.detail.event_date}
-                        // editbutton={Updatehandler}
+                        title={edittitle}
+                        image={editimage}
+                        description={editdescription}
+                        location={editlocation}
+                        time={edittime}
+                        date={editdate}
+                        type={editType}
                         event_box={open}
                         setevent_box={setOpen}
-                        id ={editID}
+                        id={editID}
+                        set_eventdata={seteventdata}
+                        settitle={setedittitle}
+                        setimage={setediimage}
+                        setdescription={setedidescription}
+                        setlocation={setedilocation}
+                        settime={seteditime}
+                        setdate={setedidate}
+                        settype={setedittype}
+                        Editbtn={Updatehandler}
                       />
                       <Card>
                         <div className="img ">
@@ -146,9 +225,10 @@ const Admin_event = () => {
                             {event_data.detail.event_title}
                           </Typography>{" "}
                           <Typography
-                            variant="body2"
+                            // variant="p"
                             color="text.secondary"
-                            style={{ height: "55px", overflow: "hidden" }}
+                            id="card_para"
+                            style={{ height: "50px", overflow: "hidden" }}
                           >
                             {event_data.detail.event_describe}
                           </Typography>
@@ -161,7 +241,7 @@ const Admin_event = () => {
                                 />
                               </span>
 
-                              <h5>{event_data.detail.event_location}</h5>
+                              <h5 className="font-medium capitalize">{event_data.detail.event_location}</h5>
                             </div>
 
                             <div className="time flex gap-5 align-middle mt-3">
@@ -169,7 +249,9 @@ const Admin_event = () => {
                                 <AccessTimeTwoToneIcon />
                               </span>
 
-                              <h5>{event_data.detail.event_time}</h5>
+                              <h5 className="font-medium">
+                                {event_data.detail.event_time}
+                              </h5>
                             </div>
 
                             <div className="calender flex gap-5 align-middle mt-3">
@@ -179,13 +261,15 @@ const Admin_event = () => {
                                 />
                               </span>
 
-                              <h5>{event_data.detail.event_date}</h5>
+                              <h5 className="font-medium">
+                                {event_data.detail.event_date}
+                              </h5>
                             </div>
                             <div className="mt-5 text-center flex gap-6">
                               <Button
                                 variant="contained"
                                 className=" w-full p-5 sm:w-2/4"
-                                onClick={(e) => Read_more(event_data)}
+                                onClick={Read_more}
                               >
                                 {" "}
                                 Read More
@@ -194,7 +278,18 @@ const Admin_event = () => {
                               <Button
                                 variant="contained"
                                 className=" w-full p-5 sm:w-2/4"
-                                onClick={(e) => Edithandler(event_data.id)}
+                                onClick={(e) =>
+                                  Edithandler(
+                                    event_data.id,
+                                    event_data.detail.event_title,
+                                    event_data.detail.event_poster,
+                                    event_data.detail.event_describe,
+                                    event_data.detail.event_location,
+                                    event_data.detail.event_time,
+                                    event_data.detail.event_date,
+                                    event_data.detail.event_type
+                                  )
+                                }
                               >
                                 {" "}
                                 <EditTwoToneIcon />{" "}
