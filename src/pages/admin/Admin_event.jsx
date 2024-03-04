@@ -2,7 +2,7 @@ import React from "react";
 import { useEffect, useState } from "react";
 
 import Admin_Navbar from "./Admin_Navbar";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   doc,
   setDoc,
