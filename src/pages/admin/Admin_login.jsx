@@ -37,7 +37,7 @@ const Admin_login = () => {
         };
         console.log(User_data, "data");
         dispatch(Adding_info(User_data));
-        navigate("/adminhome");
+        navigate("/admin_home");
       })
       .catch((error) => {
         const errorCode = error.code;
