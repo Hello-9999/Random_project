@@ -17,7 +17,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Client_home />} />
         <Route path="/iamadmin" element={<Admin_login />} />
-        <Route path="/adminhome" element={<Admin_home />} />
+        <Route path="/admin_home" element={<Admin_home />} />
         <Route path="/admin_event/" element={<Admin_event />} />
         <Route path="/admin_event/:path" element={<Admin_addevent />} />
         <Route path="/event_Detail/:uid" element={<Admin_Event_Detail />} />
