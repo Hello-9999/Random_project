@@ -95,7 +95,7 @@ const Admin_Navbar = ({ event, dash_st, member_st, blogs_st, gallery_st }) => {
               <div class="flex space-x-4 ">
                 {/* <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" --> */}
                 <a
-                  href="adminhome"
+                  href="admin_home"
                   // class="bg-gray-900 text-white rounded-md px-3 py-2 text-sm font-medium xl:text-base"
 
                   // aria-current="page"
