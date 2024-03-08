@@ -1,12 +1,7 @@
 import React, { useEffect, useState } from "react";
-import Admin_Navbar from "./Admin_Navbar";
-import {
-  doc,
-  setDoc,
-  addDoc,
-  collection,
-} from "firebase/firestore";
-import { database, db, storage } from "../../service/login_Server";
+import Admin_Navbar from "../Admin_Navbar";
+import { doc, setDoc, addDoc, collection } from "firebase/firestore";
+import { database, db, storage } from "../../../service/login_Server";
 import { useNavigate } from "react-router-dom";
 import TextField from "@mui/material/TextField";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
@@ -23,25 +18,32 @@ const Admin_addmember = () => {
 
   const hadler_add = async (e) => {
     e.preventDefault();
+    console.log(member_facebook_link);
+    let httpFacebookLink;
+    let httpLinkdeinLink;
 
-    const data = {
-      member_name: member_name,
-      member_role: member_role,
-      member_facebook_link: member_facebook_link,
-      member_linkdein_link: member_linkdein_link,
-      member_img: member_pic,
-    };
+    if (member_facebook_link.match("https://")) {
+      httpFacebookLink = member_facebook_link;
+    } else {
+      httpFacebookLink = `https://${member_facebook_link}`;
+    }
+
+    if (member_linkdein_link.match("https://")) {
+      httpLinkdeinLink = member_linkdein_link;
+    } else {
+      httpLinkdeinLink = `https://${member_linkdein_link}`;
+    }
+
     try {
       const Storageref = ref(storage, `membersprofile/${v4()}`);
       await uploadBytes(Storageref, member_pic).then((img_data) => {
         getDownloadURL(img_data.ref).then((url) => {
           if (url) {
-            console.log(url,'y')
             const form_data = {
               member_name: member_name,
               member_role: member_role,
-              member_facebook_link: member_facebook_link,
-              member_linkdein_link: member_linkdein_link,
+              member_facebook_link: httpFacebookLink,
+              member_linkdein_link: httpLinkdeinLink,
               member_img: url,
             };
             addDoc(collection(db, "member"), form_data);
@@ -53,9 +55,7 @@ const Admin_addmember = () => {
     } catch (error) {
       console.log(error);
     }
-   
   };
-
 
   return (
     <div className="add_event_container bg-slate-300 h-screen overflow-auto">
@@ -94,7 +94,7 @@ const Admin_addmember = () => {
             <div className="member_link mt-6 xl:mt-8  w-full  m-auto flex gap-4">
               <TextField
                 className="p-5 text-xl text-cyan-100 w-full"
-                onChange={(e) => setmember_facebook_link(e.target.value)}
+                onChange={(e) => setmember_facebook_link(`${e.target.value}`)}
                 minLength={10}
                 required
                 placeholder=""
@@ -107,7 +107,7 @@ const Admin_addmember = () => {
 
               <TextField
                 className="p-5 text-xl text-cyan-100 w-full"
-                onChange={(e) => setmember_linkdein_link(e.target.value)}
+                onChange={(e) => setmember_linkdein_link(`${e.target.value}`)}
                 minLength={10}
                 placeholder=""
                 multiline
