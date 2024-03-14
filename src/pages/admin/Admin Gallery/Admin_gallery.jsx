@@ -25,22 +25,14 @@ const Admin_gallery = () => {
       console.log(error);
     }
   };
-
-  console.log(galleryDetails, "tart");
-
   const details = galleryDetails.map((i) => {
     const data = i.data();
     return data;
   });
-  console.log(
-    details.filter((check) => {
-      check;
-    })
-  );
 
   useEffect(() => {
     galleryData();
-  }, []);
+  }, [galleryDetails]);
 
   return (
     <div className=" bg-slate-300 ">
@@ -59,19 +51,18 @@ const Admin_gallery = () => {
           </div>
         </div>
         <div className="admin_gallery_body ">
-          <div className="img-card w-full  flex gap-6 flex-wrap justify-between">
+          <div className="img-card w-full  flex gap-6 flex-wrap justify-evenly">
             {details.map((e) => {
-              console.log(e);
               return (
                 <Card className="w-5/12 cursor-pointer">
                   <img
-                    src={e.galleryImg.url}
-                    alt=""
+                    src={e.img[0]}
+                    alt={e.title}
                     className="w-full h-96 object-fill"
                   />
                   <CardContent>
                     <h5 className="m-auto">
-                      <b>{e.gallery_title}</b>
+                      <b>{e.title}</b>
                     </h5>
                   </CardContent>
                 </Card>
